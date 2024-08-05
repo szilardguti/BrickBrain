@@ -1,4 +1,7 @@
 import datetime
+import json
+import os
+
 import jwt
 
 import requests
@@ -21,8 +24,13 @@ def save_rebrickable_token():
 
         ujwt = create_jwt_token(user, ukey)
 
-        response = make_response(jsonify({"message": "Cookie has been saved"}))
+        response = make_response(jsonify({"message": "Successful login!"}))
         response.set_cookie(cookie_key, ujwt)
+
+        file_path = os.path.join('./saves', f"{user}.json")
+        if not os.path.exists(file_path):
+            with open(file_path, 'w') as file:
+                json.dump({}, file)
 
         return response
 
