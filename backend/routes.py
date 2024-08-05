@@ -10,6 +10,7 @@ from my_env_secrets import JWT_SIGN_KEY
 
 api_blueprint = Blueprint('api', __name__)
 cookie_key = 'brickbrain_token'
+base_url = 'https://rebrickable.com/api/v3'
 
 
 @api_blueprint.route('/login', methods=['POST'])
@@ -36,6 +37,32 @@ def save_rebrickable_token():
 
     except Exception as e:
         return jsonify({"message": "An error occurred", "error": str(e)}), 500
+
+
+@api_blueprint.route('/themes', methods=['GET'])
+def get_themes():
+    verify = handle_request_jwt()
+    if verify[1] is not None:
+        return verify[0]
+
+    ukey = verify[0]['ukey']
+    url = f'{base_url}/lego/themes'
+    headers = {
+        f'Authorization': f'key {ukey}'
+    }
+
+    all_data = []
+    while url:
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
+            data = response.json()
+            all_data.extend(data.get('results', []))
+            url = data.get('next')
+        else:
+            return jsonify({'error': 'Failed to fetch data'}), response.status_code
+
+    return jsonify(all_data)
 
 
 @api_blueprint.route('/test', methods=['GET'])
