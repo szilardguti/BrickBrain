@@ -105,6 +105,28 @@ def get_sets():
     return jsonify(all_data)
 
 
+@api_blueprint.route('/sets/<string:set_num>', methods=['GET'])
+def get_set_by_set_num(set_num):
+    verify = handle_request_jwt()
+    if verify[1] is not None:
+        return verify[0]
+
+    ukey = verify[0]['ukey']
+
+    url = f'{base_url}/lego/sets/{set_num}'
+    headers = {
+        'Authorization': f'key {ukey}'
+    }
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    
+    if response.status_code == 200:
+        return data
+    else:
+        return jsonify({'error': 'Failed to fetch data'}), response.status_code
+
+
 @api_blueprint.route('/test', methods=['GET'])
 def test():
     if handle_request_jwt()[1] is not None:
