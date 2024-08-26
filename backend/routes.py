@@ -183,6 +183,40 @@ def save_owned_set():
         return jsonify({"error": str(e)}), 400
 
 
+@api_blueprint.route('/owned/<string:guid>', methods=['PATCH'])
+def update_owned_set(guid):
+    verify = handle_request_jwt()
+    if verify[1] is not None:
+        return verify[0]
+
+    user = verify[0].get('user')
+
+    try:
+        file_path = os.path.join(save_path, f'{user}.json')
+
+        if not os.path.exists(file_path):
+            return jsonify({"error": "File not found"}), 404
+
+        with open(file_path, 'r') as file:
+            existing_data = json.load(file)
+
+        owned_set = next((item for item in existing_data if item['guid'] == guid), None)
+        if not owned_set:
+            return jsonify({"error": "Set not found"}), 404
+
+        for key, value in request.json.items():
+            if key in owned_set:
+                owned_set[key] = value
+
+        with open(file_path, 'w') as file:
+            json.dump(existing_data, file, indent=4)
+
+        return jsonify({"message": "Set updated successfully!"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
 @api_blueprint.route('/test', methods=['GET'])
 def test():
     if handle_request_jwt()[1] is not None:

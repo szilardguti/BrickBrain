@@ -55,7 +55,7 @@ class OwnedSet:
     @classmethod
     def from_dict(cls, data: dict):
         return cls(
-            guid=data['guid'],
+            guid=data.get('guid'),
             set_number=data['set_number'],
             name=data['name'],
             purchase_price=data['purchase_price'],
