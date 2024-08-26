@@ -1,1 +1,17 @@
-{"test" :  "asd"}
+[
+    {
+        "set_number": "1234",
+        "name": "LEGO Millennium Falcon",
+        "purchase_price": 500.0,
+        "average_price": 450.0,
+        "average_price_half_year": 460.0,
+        "overpriced": true,
+        "missing_pieces": [
+            "brick_1",
+            "tile_2"
+        ],
+        "missing_piece_count": 2,
+        "origin": "retail",
+        "has_manual": true
+    }
+]

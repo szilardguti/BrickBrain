@@ -8,10 +8,12 @@ import jwt
 import requests
 from flask import Blueprint, jsonify, request, make_response
 from my_env_secrets import JWT_SIGN_KEY
+from owned_set import OwnedSet
 
 api_blueprint = Blueprint('api', __name__)
 cookie_key = 'brickbrain_token'
 base_url = 'https://rebrickable.com/api/v3'
+save_path = './saves'
 
 
 @api_blueprint.route('/login', methods=['POST'])
@@ -29,10 +31,10 @@ def save_rebrickable_token():
         response = make_response(jsonify({"message": "Successful login!"}))
         response.set_cookie(cookie_key, ujwt)
 
-        file_path = os.path.join('./saves', f"{user}.json")
+        file_path = os.path.join(save_path, f'{user}.json')
         if not os.path.exists(file_path):
             with open(file_path, 'w') as file:
-                json.dump({}, file)
+                json.dump([], file)
 
         return response
 
@@ -40,7 +42,7 @@ def save_rebrickable_token():
         return jsonify({"message": "An error occurred", "error": str(e)}), 500
 
 
-def get_all_data_by_url_and_params(url, params = None):
+def get_all_data_by_url_and_params(url, params=None):
     verify = handle_request_jwt()
     if verify[1] is not None:
         return verify[0]
@@ -146,6 +148,39 @@ def get_parts_by_set_num(set_num):
 def get_minifigs_by_set_num(set_num):
     url = f'{base_url}/lego/sets/{set_num}/minifigs'
     return get_all_data_by_url_and_params(url, None)
+
+
+@api_blueprint.route('/owned', methods=['POST'])
+def save_owned_set():
+    verify = handle_request_jwt()
+    if verify[1] is not None:
+        return verify[0]
+
+    user = verify[0].get('user')
+
+    try:
+        data = request.json
+
+        owned_set = OwnedSet.from_dict(data)
+        owned_set_dict = owned_set.to_dict()
+
+        file_path = os.path.join(save_path, f'{user}.json')
+
+        if os.path.exists(file_path):
+            with open(file_path, 'r') as file:
+                existing_data = json.load(file)
+        else:
+            existing_data = []
+
+        existing_data.append(owned_set_dict)
+
+        with open(file_path, 'w') as file:
+            json.dump(existing_data, file, indent=4)
+
+        return jsonify({"message": "Saved successfully!"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 
 @api_blueprint.route('/test', methods=['GET'])
