@@ -217,6 +217,29 @@ def update_owned_set(guid):
         return jsonify({"error": str(e)}), 400
 
 
+@api_blueprint.route('/owned', methods=['GET'])
+def get_owned_sets():
+    verify = handle_request_jwt()
+    if verify[1] is not None:
+        return verify[0]
+
+    user = verify[0].get('user')
+
+    try:
+        file_path = os.path.join(save_path, f'{user}.json')
+
+        if not os.path.exists(file_path):
+            return jsonify({"error": "File not found"}), 404
+
+        with open(file_path, 'r') as file:
+            existing_data = json.load(file)
+
+        return existing_data, 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
 @api_blueprint.route('/test', methods=['GET'])
 def test():
     if handle_request_jwt()[1] is not None:
