@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+import time
 
 import jwt
 
@@ -61,6 +62,45 @@ def get_themes():
             url = data.get('next')
         else:
             return jsonify({'error': 'Failed to fetch data'}), response.status_code
+
+    return jsonify(all_data)
+
+
+@api_blueprint.route('/sets', methods=['GET'])
+def get_sets():
+    verify = handle_request_jwt()
+    if verify[1] is not None:
+        return verify[0]
+
+    ukey = verify[0]['ukey']
+    theme_id = request.args.get('theme_id')
+    search = request.args.get('search')
+
+    url = f'{base_url}/lego/sets/'
+    headers = {
+        'Authorization': f'key {ukey}'
+    }
+
+    params = {}
+    if theme_id:
+        params['theme_id'] = theme_id
+    if search:
+        params['search'] = search
+
+    all_data = []
+    while url:
+        response = requests.get(url, headers=headers, params=params)
+
+        if response.status_code == 200:
+            data = response.json()
+            all_data.extend(data.get('results', []))
+            url = data.get('next')
+        else:
+            return jsonify({'error': 'Failed to fetch data'}), response.status_code
+
+        # Clear params after the first request because 'next' already includes them
+        params = {}
+        time.sleep(0.1)
 
     return jsonify(all_data)
 
