@@ -40,6 +40,54 @@ def save_rebrickable_token():
         return jsonify({"message": "An error occurred", "error": str(e)}), 500
 
 
+def get_all_data_by_url_and_params(url, params = None):
+    verify = handle_request_jwt()
+    if verify[1] is not None:
+        return verify[0]
+
+    ukey = verify[0]['ukey']
+
+    headers = {
+        'Authorization': f'key {ukey}'
+    }
+
+    all_data = []
+    while url:
+        response = requests.get(url, headers=headers, params=params)
+
+        if response.status_code == 200:
+            data = response.json()
+            all_data.extend(data.get('results', []))
+            url = data.get('next')
+        else:
+            return jsonify({'error': 'Failed to fetch data'}), response.status_code
+
+        # Clear params after the first request because 'next' already includes them
+        params = {}
+        time.sleep(0.1)
+
+    return jsonify(all_data)
+
+
+def get_single_data_by_url(url):
+    verify = handle_request_jwt()
+    if verify[1] is not None:
+        return verify[0]
+
+    ukey = verify[0]['ukey']
+
+    headers = {
+        'Authorization': f'key {ukey}'
+    }
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return jsonify({'error': 'Failed to fetch data'}), response.status_code
+
+
 @api_blueprint.route('/themes', methods=['GET'])
 def get_themes():
     verify = handle_request_jwt()
@@ -68,18 +116,8 @@ def get_themes():
 
 @api_blueprint.route('/sets', methods=['GET'])
 def get_sets():
-    verify = handle_request_jwt()
-    if verify[1] is not None:
-        return verify[0]
-
-    ukey = verify[0]['ukey']
     theme_id = request.args.get('theme_id')
     search = request.args.get('search')
-
-    url = f'{base_url}/lego/sets/'
-    headers = {
-        'Authorization': f'key {ukey}'
-    }
 
     params = {}
     if theme_id:
@@ -87,44 +125,27 @@ def get_sets():
     if search:
         params['search'] = search
 
-    all_data = []
-    while url:
-        response = requests.get(url, headers=headers, params=params)
+    url = f'{base_url}/lego/sets/'
 
-        if response.status_code == 200:
-            data = response.json()
-            all_data.extend(data.get('results', []))
-            url = data.get('next')
-        else:
-            return jsonify({'error': 'Failed to fetch data'}), response.status_code
-
-        # Clear params after the first request because 'next' already includes them
-        params = {}
-        time.sleep(0.1)
-
-    return jsonify(all_data)
+    return get_all_data_by_url_and_params(url, params)
 
 
 @api_blueprint.route('/sets/<string:set_num>', methods=['GET'])
 def get_set_by_set_num(set_num):
-    verify = handle_request_jwt()
-    if verify[1] is not None:
-        return verify[0]
-
-    ukey = verify[0]['ukey']
-
     url = f'{base_url}/lego/sets/{set_num}'
-    headers = {
-        'Authorization': f'key {ukey}'
-    }
+    return get_single_data_by_url(url)
 
-    response = requests.get(url, headers=headers)
-    data = response.json()
-    
-    if response.status_code == 200:
-        return data
-    else:
-        return jsonify({'error': 'Failed to fetch data'}), response.status_code
+
+@api_blueprint.route('/sets/<string:set_num>/parts', methods=['GET'])
+def get_parts_by_set_num(set_num):
+    url = f'{base_url}/lego/sets/{set_num}/parts'
+    return get_all_data_by_url_and_params(url, None)
+
+
+@api_blueprint.route('/sets/<string:set_num>/minifigs', methods=['GET'])
+def get_minifigs_by_set_num(set_num):
+    url = f'{base_url}/lego/sets/{set_num}/minifigs'
+    return get_all_data_by_url_and_params(url, None)
 
 
 @api_blueprint.route('/test', methods=['GET'])
@@ -162,4 +183,3 @@ def handle_request_jwt():
         return {"message": "No cookie found"}, 400
 
     return verify_jwt_token(cookie)
-
