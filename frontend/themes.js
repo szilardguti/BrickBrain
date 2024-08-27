@@ -22,7 +22,7 @@ function fetchThemes() {
         const mainRow = document.createElement("tr");
         mainRow.className = "main-category";
         mainRow.dataset.id = mainCategory.id;
-        mainRow.innerHTML = `<td>${mainCategory.id}</td><td>${mainCategory.name}</td>`;
+        mainRow.innerHTML = `<td>${mainCategory.id}</td><td>${mainCategory.name}</td><td><button class="view-sets-btn" data-theme-id="${mainCategory.id}">VIEW</button></td>`;
         tableBody.appendChild(mainRow);
 
         // Create rows for the sub-themes
@@ -30,7 +30,7 @@ function fetchThemes() {
           if (subTheme.parent_id === mainCategory.id) {
             const subRow = document.createElement("tr");
             subRow.className = `sub-theme sub-theme-${mainCategory.id}`;
-            subRow.innerHTML = `<td>${subTheme.name}</td>`;
+            subRow.innerHTML = `<td>${subTheme.id}</td><td>${subTheme.name}</td><td><button class="view-sets-btn" data-theme-id="${subTheme.id}">VIEW</button></td>`;
             tableBody.appendChild(subRow);
           }
         });
@@ -47,18 +47,18 @@ function fetchThemes() {
         });
       });
     })
+    .then((_) => addButtonListeners())
     .catch((error) => {
       console.error("Error fetching themes:", error);
     });
 }
 
-function getCookie(name) {
-  let matches = document.cookie.match(
-    new RegExp(
-      "(?:^|; )" +
-        name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, "\\$1") +
-        "=([^;]*)"
-    )
-  );
-  return matches ? decodeURIComponent(matches[1]) : undefined;
+function addButtonListeners() {
+  const buttons = document.querySelectorAll(".view-sets-btn");
+  buttons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const themeId = this.getAttribute("data-theme-id");
+      window.location.href = `sets.html?theme_id=${themeId}`;
+    });
+  });
 }
