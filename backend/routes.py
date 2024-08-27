@@ -4,9 +4,9 @@ import os
 import time
 
 import jwt
-
 import requests
 from flask import Blueprint, jsonify, request, make_response
+
 from my_env_secrets import JWT_SIGN_KEY
 from owned_set import OwnedSet
 
@@ -29,7 +29,7 @@ def save_rebrickable_token():
         ujwt = create_jwt_token(user, ukey)
 
         response = make_response(jsonify({"message": "Successful login!"}))
-        response.set_cookie(cookie_key, ujwt)
+        response.set_cookie(cookie_key, ujwt, domain='127.0.0.1', httponly=False, path='/')
 
         file_path = os.path.join(save_path, f'{user}.json')
         if not os.path.exists(file_path):
