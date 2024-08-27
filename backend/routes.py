@@ -45,7 +45,7 @@ def save_rebrickable_token():
 def get_all_data_by_url_and_params(url, params=None):
     verify = handle_request_jwt()
     if verify[1] is not None:
-        return verify[0]
+        return verify
 
     ukey = verify[0]['ukey']
 
@@ -74,7 +74,7 @@ def get_all_data_by_url_and_params(url, params=None):
 def get_single_data_by_url(url):
     verify = handle_request_jwt()
     if verify[1] is not None:
-        return verify[0]
+        return verify
 
     ukey = verify[0]['ukey']
 
@@ -94,7 +94,7 @@ def get_single_data_by_url(url):
 def get_themes():
     verify = handle_request_jwt()
     if verify[1] is not None:
-        return verify[0]
+        return verify
 
     ukey = verify[0]['ukey']
     url = f'{base_url}/lego/themes'
@@ -154,7 +154,7 @@ def get_minifigs_by_set_num(set_num):
 def save_owned_set():
     verify = handle_request_jwt()
     if verify[1] is not None:
-        return verify[0]
+        return verify
 
     user = verify[0].get('user')
 
@@ -187,7 +187,7 @@ def save_owned_set():
 def update_owned_set(guid):
     verify = handle_request_jwt()
     if verify[1] is not None:
-        return verify[0]
+        return verify
 
     user = verify[0].get('user')
 
@@ -212,6 +212,39 @@ def update_owned_set(guid):
             json.dump(existing_data, file, indent=4)
 
         return jsonify({"message": "Set updated successfully!"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+@api_blueprint.route('/owned/<string:guid>', methods=['DELETE'])
+def delete_owned_set(guid):
+    verify = handle_request_jwt()
+    print(verify)
+    if verify[1] is not None:
+        return verify
+
+    user = verify[0].get('user')
+
+    try:
+        file_path = os.path.join(save_path, f'{user}.json')
+
+        if not os.path.exists(file_path):
+            return jsonify({"error": "File not found"}), 404
+
+        with open(file_path, 'r') as file:
+            existing_data = json.load(file)
+
+        owned_set = next((item for item in existing_data if item['guid'] == guid), None)
+        if not owned_set:
+            return jsonify({"error": "Set not found"}), 404
+
+        existing_data.remove(owned_set)
+
+        with open(file_path, 'w') as file:
+            json.dump(existing_data, file, indent=4)
+
+        return jsonify({"message": "Set deleted successfully!"}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
