@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  spinner = document.getElementById("spinner");
   fetchThemes();
 });
 
@@ -48,6 +49,7 @@ function fetchThemes() {
       });
     })
     .then((_) => addButtonListeners())
+    .then((_) => spinner.classList.add("disabled"))
     .catch((error) => {
       console.error("Error fetching themes:", error);
     });

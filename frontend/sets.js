@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
           const img = document.createElement("img");
           img.src = set.set_img_url;
           img.alt = set.name;
-          img.style.width = "100px"; // Set a fixed image width
+          img.style.width = "300px";
           imgCell.appendChild(img);
           row.appendChild(imgCell);
 

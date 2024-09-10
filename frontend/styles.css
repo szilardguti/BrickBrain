@@ -8,6 +8,10 @@ table {
   margin: auto;
 }
 
+#spinner {
+  width: 20%;
+}
+
 tr td:first-child {
   width: 5%;
 }
@@ -32,4 +36,14 @@ td {
 
 .sub-theme td {
   padding: 1rem;
+}
+
+.disabled {
+  display: none;
+}
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
