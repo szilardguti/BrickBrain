@@ -3,6 +3,7 @@ import json
 import os
 import time
 
+import bcrypt
 import jwt
 import requests
 from flask import Blueprint, jsonify, request, make_response
@@ -16,25 +17,64 @@ base_url = 'https://rebrickable.com/api/v3'
 save_path = './saves'
 
 
+@api_blueprint.route('/register', methods=['POST'])
+def register_user():
+    try:
+        body = request.get_json()
+        user = body.get('user')
+        pw = body.get('pw')
+        ukey = body.get('ukey')
+
+        if not user or not ukey or not pw:
+            return jsonify({"message": "Missing 'user' or 'ukey' or 'pw' parameter"}), 400
+
+        file_path = os.path.join(save_path, f'{user}.json')
+        if os.path.exists(file_path):
+            return jsonify({"message": "User already exists"}), 404
+
+        hashed_pw = bcrypt.hashpw(pw.encode('utf-8'), bcrypt.gensalt())
+
+        with open(file_path, 'w') as file:
+            json.dump({
+                "ukey": ukey,
+                "pw": hashed_pw.decode('utf-8'),
+                "sets": []
+            }, file)
+
+        response = make_response(jsonify({"message": "Successful registration!"}))
+
+        return response
+
+    except Exception as e:
+        return jsonify({"message": "An error occurred", "error": str(e)}), 500
+
+
 @api_blueprint.route('/login', methods=['POST'])
 def save_rebrickable_token():
     try:
         body = request.get_json()
         user = body.get('user')
-        ukey = body.get('ukey')
+        pw = body.get('pw')
 
-        if not user or not ukey:
-            return jsonify({"message": "Missing 'user' or 'ukey' parameter"}), 400
+        if not user or not pw:
+            return jsonify({"message": "Missing 'user' or 'pw' parameter"}), 400
+
+        file_path = os.path.join(save_path, f'{user}.json')
+        if not os.path.exists(file_path):
+            return jsonify({"message": "User does not exit"}), 404
+
+        # READ UKEY FROM FILE
+        with open(file_path, 'r') as file:
+            user_data = json.load(file)
+            if not bcrypt.checkpw(pw.encode('utf-8'), user_data['pw'].encode('utf-8')):
+                return jsonify({"message": "Wrong password"}), 400  # might be better to use generic error message
+
+            ukey = user_data['ukey']
 
         ujwt = create_jwt_token(user, ukey)
 
         response = make_response(jsonify({"message": "Successful login!"}))
         response.set_cookie(cookie_key, ujwt, domain='127.0.0.1', httponly=False, path='/')
-
-        file_path = os.path.join(save_path, f'{user}.json')
-        if not os.path.exists(file_path):
-            with open(file_path, 'w') as file:
-                json.dump([], file)
 
         return response
 
@@ -166,13 +206,13 @@ def save_owned_set():
 
         file_path = os.path.join(save_path, f'{user}.json')
 
-        if os.path.exists(file_path):
-            with open(file_path, 'r') as file:
-                existing_data = json.load(file)
-        else:
-            existing_data = []
+        if not os.path.exists(file_path):
+            return jsonify({"error": "User not found"}), 404
 
-        existing_data.append(owned_set_dict)
+        with open(file_path, 'r') as file:
+            existing_data = json.load(file)
+
+        existing_data['sets'].append(owned_set_dict)
 
         with open(file_path, 'w') as file:
             json.dump(existing_data, file, indent=4)
@@ -195,12 +235,12 @@ def update_owned_set(guid):
         file_path = os.path.join(save_path, f'{user}.json')
 
         if not os.path.exists(file_path):
-            return jsonify({"error": "File not found"}), 404
+            return jsonify({"error": "User not found"}), 404
 
         with open(file_path, 'r') as file:
             existing_data = json.load(file)
 
-        owned_set = next((item for item in existing_data if item['guid'] == guid), None)
+        owned_set = next((item for item in existing_data['sets'] if item['guid'] == guid), None)
         if not owned_set:
             return jsonify({"error": "Set not found"}), 404
 
@@ -230,16 +270,16 @@ def delete_owned_set(guid):
         file_path = os.path.join(save_path, f'{user}.json')
 
         if not os.path.exists(file_path):
-            return jsonify({"error": "File not found"}), 404
+            return jsonify({"error": "User not found"}), 404
 
         with open(file_path, 'r') as file:
             existing_data = json.load(file)
 
-        owned_set = next((item for item in existing_data if item['guid'] == guid), None)
+        owned_set = next((item for item in existing_data['sets'] if item['guid'] == guid), None)
         if not owned_set:
             return jsonify({"error": "Set not found"}), 404
 
-        existing_data.remove(owned_set)
+        existing_data['sets'].remove(owned_set)
 
         with open(file_path, 'w') as file:
             json.dump(existing_data, file, indent=4)
@@ -262,10 +302,10 @@ def get_owned_sets():
         file_path = os.path.join(save_path, f'{user}.json')
 
         if not os.path.exists(file_path):
-            return jsonify({"error": "File not found"}), 404
+            return jsonify({"error": "User not found"}), 404
 
         with open(file_path, 'r') as file:
-            existing_data = json.load(file)
+            existing_data = json.load(file)['sets']
 
         return existing_data, 200
 
