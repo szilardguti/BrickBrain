@@ -142,6 +142,14 @@ def get_themes():
         f'Authorization': f'key {ukey}'
     }
 
+    cache_path = './cache/themes.json'
+    new_cache = request.args.get('new') == "True"
+
+    if (not new_cache) & os.path.exists('./cache/themes.json'):
+        with open(cache_path, 'r') as file:
+            cache_data = json.load(file)
+            return cache_data
+
     all_data = []
     while url:
         response = requests.get(url, headers=headers)
@@ -152,6 +160,9 @@ def get_themes():
             url = data.get('next')
         else:
             return jsonify({'error': 'Failed to fetch data'}), response.status_code
+
+    with open(cache_path, 'w') as file:
+        json.dump(all_data, file, indent=4)
 
     return jsonify(all_data)
 
