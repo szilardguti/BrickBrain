@@ -49,6 +49,17 @@ document.addEventListener("DOMContentLoaded", function () {
           partsCell.textContent = set.num_parts;
           row.appendChild(partsCell);
 
+          const buttonCell = document.createElement("td");
+          const addButton = document.createElement("button");
+          addButton.textContent = "Add Set";
+
+          addButton.addEventListener("click", () => {
+            window.location.href = `addset.html?set_num=${set.set_num}`;
+          });
+
+          buttonCell.appendChild(addButton);
+          row.appendChild(buttonCell);
+
           tableBody.appendChild(row);
         });
       })
