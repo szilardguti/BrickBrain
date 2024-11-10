@@ -54,6 +54,8 @@ document.addEventListener("DOMContentLoaded", function () {
           addButton.textContent = "Add Set";
 
           addButton.addEventListener("click", () => {
+            sessionStorage.setItem("set_name", set.name);
+            sessionStorage.setItem("set_img", set.set_img_url);
             window.location.href = `addset.html?set_num=${set.set_num}`;
           });
 

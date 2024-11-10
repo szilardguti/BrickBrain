@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add owned set</title>
+  </head>
+  <body>
+    <h2>LEGO Set Details</h2>
+    <img style="width: 25%" id="set_img" />
+    <form id="legoSetForm">
+      <!-- Set Number (prefilled from query param) -->
+      <label for="set_number">Set Number:</label>
+      <input type="text" id="set_number" name="set_number" required readonly />
+      <br /><br />
+
+      <!-- Set Name (prefilled from sessionStorage) -->
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required />
+      <br /><br />
+
+      <!-- Purchase Price -->
+      <label for="purchase_price">Purchase Price ($):</label>
+      <input
+        type="number"
+        id="purchase_price"
+        name="purchase_price"
+        step="0.01"
+        min="0"
+        required
+      />
+      <br /><br />
+
+      <!-- Average Price -->
+      <label for="average_price">Average Market Price ($):</label>
+      <input
+        type="number"
+        id="average_price"
+        name="average_price"
+        step="0.01"
+        min="0"
+        required
+      />
+      <br /><br />
+
+      <!-- Average Price Half-Year -->
+      <label for="average_price_half_year">Half-Year Average Price ($):</label>
+      <input
+        type="number"
+        id="average_price_half_year"
+        name="average_price_half_year"
+        step="0.01"
+        min="0"
+        required
+      />
+      <br /><br />
+
+      <!-- Overpriced (Checkbox) -->
+      <label for="overpriced">Overpriced:</label>
+      <input type="checkbox" id="overpriced" name="overpriced" />
+      <br /><br />
+
+      <!-- Missing Pieces -->
+      <label for="missing_pieces">Missing Pieces (comma-separated):</label>
+      <textarea
+        id="missing_pieces"
+        name="missing_pieces"
+        placeholder="e.g., piece1, piece2"
+      >
+      </textarea>
+      <br /><br />
+
+      <!-- Origin -->
+      <label for="origin">Origin:</label>
+      <input type="text" id="origin" name="origin" required />
+      <br /><br />
+
+      <!-- Has Manual (Checkbox) -->
+      <label for="has_manual">Includes Manual:</label>
+      <input type="checkbox" id="has_manual" name="has_manual" />
+      <br /><br />
+
+      <!-- Submit Button -->
+      <button type="submit">Submit</button>
+    </form>
+
+    <script src="addset.js"></script>
+  </body>
+</html>
