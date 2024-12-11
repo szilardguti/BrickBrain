@@ -13,21 +13,25 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h2>Themes Table</h2>
-    <table id="themesTable">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Theme Name</th>
-          <th>View sets</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- JavaScript will populate this table -->
-      </tbody>
-    </table>
-    <div class="center-container">
-      <img id="spinner" src="./resources/spinner.gif" />
+    <div
+      class="d-flex flex-column justify-content-center align-items-center p-4"
+    >
+      <table id="themesTable" class="table table-hover table-responsive w-50">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Theme Name</th>
+            <th>Show Subthemes</th>
+            <th>View sets</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- JavaScript will populate this table -->
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-center">
+        <img id="spinner" src="./resources/spinner.gif" />
+      </div>
     </div>
 
     <script src="themes.js"></script>
