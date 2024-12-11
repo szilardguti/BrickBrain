@@ -61,13 +61,13 @@ def save_rebrickable_token():
 
         file_path = os.path.join(save_path, f'{user}.json')
         if not os.path.exists(file_path):
-            return jsonify({"message": "User does not exit"}), 404
+            return jsonify({"message": "Login failed! Try another username or password!"}), 400
 
         # READ UKEY FROM FILE
         with open(file_path, 'r') as file:
             user_data = json.load(file)
             if not bcrypt.checkpw(pw.encode('utf-8'), user_data['pw'].encode('utf-8')):
-                return jsonify({"message": "Wrong password"}), 400  # might be better to use generic error message
+                return jsonify({"message": "Login failed! Try another username or password!"}), 400
 
             ukey = user_data['ukey']
 

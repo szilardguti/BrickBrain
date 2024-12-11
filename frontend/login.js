@@ -17,17 +17,13 @@ document
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else if (response.status === 404) {
-          debugger;
-          window.location.href = "register.html";
         } else {
-          throw new Error("Login failed.");
+          return response.json().then((errorData) => {
+            throw new Error(errorData.message || "An error occurred");
+          });
         }
       })
       .then((data) => {
-        // alert(data.message);
-
-        // Redirect to the themes page
         window.location.href = "themes.html";
       })
       .catch((error) => {

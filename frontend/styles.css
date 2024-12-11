@@ -1,49 +1,12 @@
 body {
   background-color: ghostwhite;
-}
-
-table {
-  width: 50%;
-  border-collapse: collapse;
-  margin: auto;
+  height: 100vh;
 }
 
 #spinner {
   width: 20%;
 }
 
-tr td:first-child {
-  width: 5%;
-}
-
-th,
-td {
-  padding: 1.5rem;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-.main-category {
-  cursor: pointer;
-  background-color: mediumseagreen;
-  font-weight: bold;
-}
-
-.sub-theme {
-  display: none;
-  background-color: teal;
-}
-
-.sub-theme td {
-  padding: 1rem;
-}
-
 .disabled {
   display: none;
-}
-
-.center-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
