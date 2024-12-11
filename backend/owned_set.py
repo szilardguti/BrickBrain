@@ -4,7 +4,7 @@ import uuid
 class OwnedSet:
     def __init__(self, guid: str, set_number: str, name: str, purchase_price: float, average_price: float,
                  average_price_half_year: float, overpriced: bool, missing_pieces: list,
-                 origin: str, has_manual: bool):
+                 origin: str, has_manual: bool, has_box: bool, set_img_url: str):
         """
         Initialize an instance of the OwnedSet class.
 
@@ -29,13 +29,16 @@ class OwnedSet:
         self.missing_piece_count = len(missing_pieces)
         self.origin = origin
         self.has_manual = has_manual
+        self.has_box = has_box
+        self.set_img_url = set_img_url
 
     def __repr__(self):
         return (f"OwnedSet(guid='{self.guid}, set_number='{self.set_number}', name='{self.name}', "
                 f"purchase_price={self.purchase_price}, average_price={self.average_price}, "
                 f"average_price_half_year={self.average_price_half_year}, overpriced={self.overpriced}, "
                 f"missing_pieces={self.missing_pieces}, missing_piece_count={self.missing_piece_count}, "
-                f"origin='{self.origin}', has_manual={self.has_manual})")
+                f"origin='{self.origin}', has_manual={self.has_manual}), has_box={self.has_box}, "
+                f"set_img_url='{self.set_img_url}'")
 
     def to_dict(self):
         return {
@@ -49,7 +52,9 @@ class OwnedSet:
             'missing_pieces': self.missing_pieces,
             'missing_piece_count': self.missing_piece_count,
             'origin': self.origin,
-            'has_manual': self.has_manual
+            'has_manual': self.has_manual,
+            'has_box': self.has_box,
+            'set_img_url': self.set_img_url
         }
 
     @classmethod
@@ -64,5 +69,7 @@ class OwnedSet:
             overpriced=data['overpriced'],
             missing_pieces=data['missing_pieces'],
             origin=data['origin'],
-            has_manual=data['has_manual']
+            has_manual=data['has_manual'],
+            has_box=data['has_box'],
+            set_img_url=data['set_img_url']
         )

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Owned LEGO Sets</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+      }
+      th {
+        background-color: #f4f4f4;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>My Owned LEGO Sets</h2>
+    <table id="ownedSetsTable">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Set Number</th>
+          <th>Name</th>
+          <th>Purchase Price</th>
+          <th>Average Price</th>
+          <th>Half-Year Avg Price</th>
+          <th>Overpriced</th>
+          <th>Missing Pieces</th>
+          <th>Origin</th>
+          <th>Has Manual</th>
+          <th>Has Box</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows will be dynamically inserted here -->
+      </tbody>
+    </table>
+    <div class="center-container">
+      <img id="spinner" src="./resources/spinner.gif" />
+    </div>
+    <script src="mysets.js"></script>
+  </body>
+</html>
