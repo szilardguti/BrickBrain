@@ -1,12 +1,27 @@
 body {
-  background-color: ghostwhite;
+  background-color: rgb(255, 215, 0);
   height: 100vh;
+  padding: 0;
+}
+
+.yellow-text {
+  color: rgb(255, 215, 0);
+}
+
+.btn-yellow {
+  background-color: rgb(255, 215, 0);
+  color: black;
+}
+
+.btn-yellow:hover {
+  background-color: white;
+  color: black;
 }
 
 #spinner {
   width: 20%;
 }
 
-.disabled {
+.hidden {
   display: none;
 }

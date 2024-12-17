@@ -19,6 +19,10 @@ function fetchThemes() {
       const tableBody = document.querySelector("#themesTable tbody");
 
       mainCategories.forEach((mainCategory) => {
+        const currentsubThemes = subThemes.filter(
+          (theme) => theme.parent_id === mainCategory.id
+        );
+
         // Create a row for the main category
         const mainRow = document.createElement("tr");
         mainRow.dataset.id = mainCategory.id;
@@ -37,22 +41,26 @@ function fetchThemes() {
         mainSubthemeButton.type = "button";
         mainSubthemeButton.classList.add(
           "btn",
-          "btn-dark",
+          "btn-yellow",
           "subtheme-btn",
           "btn-sm",
           "w-100"
         );
         mainSubthemeButton.dataset.theme_id = mainCategory.id;
-        mainSubthemeButton.innerText = "Show Subtheme";
+        mainSubthemeButton.innerText = `Show Subtheme (${currentsubThemes.length})`;
         mainSubthemeButtonCell.appendChild(mainSubthemeButton);
         mainRow.appendChild(mainSubthemeButtonCell);
+
+        if (currentsubThemes.length === 0) {
+          mainSubthemeButton.classList.add("disabled");
+        }
 
         const mainViewButtonCell = document.createElement("td");
         const mainViewButton = document.createElement("button");
         mainViewButton.type = "button";
         mainViewButton.classList.add(
           "btn",
-          "btn-dark",
+          "btn-yellow",
           "view-sets-btn",
           "btn-sm",
           "w-100"
@@ -66,7 +74,7 @@ function fetchThemes() {
 
         const subTableRow = document.createElement("tr");
         subTableRow.id = `sub-${mainCategory.id}`;
-        subTableRow.className = "disabled";
+        subTableRow.className = "hidden";
 
         const subCell = document.createElement("td");
         subCell.colSpan = 4;
@@ -86,37 +94,35 @@ function fetchThemes() {
         const subTableBody = document.createElement("tbody");
 
         // Create rows for the sub-themes
-        subThemes.forEach((subTheme) => {
-          if (subTheme.parent_id === mainCategory.id) {
-            const subRow = document.createElement("tr");
-            subRow.dataset.id = subTheme.id;
+        currentsubThemes.forEach((subTheme) => {
+          const subRow = document.createElement("tr");
+          subRow.dataset.id = subTheme.id;
 
-            const subID = document.createElement("td");
-            subID.innerText = subTheme.id;
-            subRow.appendChild(subID);
+          const subID = document.createElement("td");
+          subID.innerText = subTheme.id;
+          subRow.appendChild(subID);
 
-            const subName = document.createElement("td");
-            subName.innerText = subTheme.name;
-            subRow.appendChild(subName);
+          const subName = document.createElement("td");
+          subName.innerText = subTheme.name;
+          subRow.appendChild(subName);
 
-            const viewButtonCell = document.createElement("td");
-            const viewButton = document.createElement("button");
-            viewButton.type = "button";
-            viewButton.classList.add(
-              "btn",
-              "btn-dark",
-              "view-sets-btn",
-              "btn",
-              "btn-sm",
-              "w-100"
-            );
-            viewButton.dataset.theme_id = subTheme.id;
-            viewButton.innerText = "View";
-            viewButtonCell.appendChild(viewButton);
-            subRow.appendChild(viewButtonCell);
+          const viewButtonCell = document.createElement("td");
+          const viewButton = document.createElement("button");
+          viewButton.type = "button";
+          viewButton.classList.add(
+            "btn",
+            "btn-yellow",
+            "view-sets-btn",
+            "btn",
+            "btn-sm",
+            "w-100"
+          );
+          viewButton.dataset.theme_id = subTheme.id;
+          viewButton.innerText = "View";
+          viewButtonCell.appendChild(viewButton);
+          subRow.appendChild(viewButtonCell);
 
-            subTableBody.appendChild(subRow);
-          }
+          subTableBody.appendChild(subRow);
         });
 
         subTable.appendChild(subTableBody);
@@ -126,7 +132,7 @@ function fetchThemes() {
       });
     })
     .then((_) => addButtonListeners())
-    .then((_) => spinner.classList.add("disabled"))
+    .then((_) => spinner.classList.add("hidden"))
     .catch((error) => {
       console.error("Error fetching themes:", error);
     });
@@ -149,10 +155,10 @@ function addButtonListeners() {
         event.currentTarget.parentNode.parentNode.getAttribute("data-id");
 
       const subthemeRow = document.getElementById(`sub-${themeId}`);
-      if (subthemeRow.classList.contains("disabled")) {
-        subthemeRow.classList.remove("disabled");
+      if (subthemeRow.classList.contains("hidden")) {
+        subthemeRow.classList.remove("hidden");
       } else {
-        subthemeRow.classList.add("disabled");
+        subthemeRow.classList.add("hidden");
       }
     });
   });
