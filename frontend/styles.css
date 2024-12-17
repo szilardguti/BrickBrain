@@ -1,21 +1,22 @@
 body {
-  background-color: rgb(255, 215, 0);
+  --lego-yellow: rgb(255, 215, 0);
+  background-color: var(--lego-yellow);
   height: 100vh;
   padding: 0;
 }
 
 .yellow-text {
-  color: rgb(255, 215, 0);
+  color: var(--lego-yellow);
 }
 
 .btn-yellow {
-  background-color: rgb(255, 215, 0);
+  background-color: var(--lego-yellow);
   color: black;
 }
 
 .btn-yellow:hover {
-  background-color: white;
-  color: black;
+  background-color: black;
+  color: var(--lego-yellow);
 }
 
 #spinner {
