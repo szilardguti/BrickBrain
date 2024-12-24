@@ -16,13 +16,29 @@
     <div
       class="d-flex flex-column justify-content-center align-items-center p-4"
     >
-      <table id="themesTable" class="table table-hover table-responsive w-50">
-        <thead>
+      <div class="input-group mb-3 w-50 bg-white p-3 rounded-pill">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search..."
+          id="searchInput"
+          aria-label="Search"
+          aria-describedby="searchButton"
+        />
+        <button class="btn btn-yellow" type="button" id="searchButton">
+          Search
+        </button>
+      </div>
+      <table
+        id="themesTable"
+        class="table table-hover table-responsive w-50 border border-dark"
+      >
+        <thead class="table-dark">
           <tr>
-            <th>ID</th>
-            <th>Theme Name</th>
-            <th>Show Subthemes</th>
-            <th>View sets</th>
+            <th scope="col">ID</th>
+            <th scope="col">Theme Name</th>
+            <th scope="col">Show Subthemes</th>
+            <th scope="col">View sets</th>
           </tr>
         </thead>
         <tbody>
