@@ -8,6 +8,7 @@ import jwt
 import requests
 from flask import Blueprint, jsonify, request, make_response
 
+from custom_exception import ErrorCode
 from my_env_secrets import JWT_SIGN_KEY
 from owned_set import OwnedSet
 
@@ -356,6 +357,6 @@ def handle_request_jwt():
     cookie = request.cookies.get(cookie_key)
 
     if not cookie:
-        return {"message": "No cookie found"}, 400
+        return {"message": "No cookie found", "err_code": ErrorCode.NO_COOKIE.value }, 400
 
     return verify_jwt_token(cookie)

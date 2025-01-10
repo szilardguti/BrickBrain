@@ -59,7 +59,18 @@ function fetchThemes() {
     },
     credentials: "include",
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.ok) return response.json();
+      else {
+        return response.json().then((errorData) => {
+          // no cookie found
+          if (errorData.err_code && errorData.err_code == 401)
+            window.location.href = "login.html";
+
+          throw new Error(errorData.message || "An error occurred");
+        });
+      }
+    })
     .then((data) => {
       sessionStorage.setItem("themes", JSON.stringify(data));
       showThemes(data);

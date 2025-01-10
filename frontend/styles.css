@@ -5,6 +5,11 @@ body {
   padding: 0;
 }
 
+div#brick-layer {
+  background: url("./resources/brick1.png");
+  position: relative;
+}
+
 .yellow-text {
   color: var(--lego-yellow);
 }

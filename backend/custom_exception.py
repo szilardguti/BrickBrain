@@ -2,6 +2,7 @@ from enum import Enum
 
 
 class ErrorCode(Enum):
+    NO_COOKIE = 401
     SCRAPE_LIMIT_EXCEEDED = 501
 
 
