@@ -8,6 +8,20 @@ body {
 div#brick-layer {
   background: url("./resources/brick1.png");
   position: relative;
+  min-height: 100vh;
+}
+
+#setsTable {
+  text-align: center;
+  vertical-align: middle;
+}
+
+#setsTable > tbody > tr > td:first-child > image {
+  max-height: 30px;
+}
+
+#setsTable th {
+  vertical-align: middle;
 }
 
 .yellow-text {

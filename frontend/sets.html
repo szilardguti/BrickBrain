@@ -13,23 +13,34 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>LEGO Sets</h1>
-    <table id="setsTable">
-      <thead>
-        <tr>
-          <th>Image</th>
-          <th>Set Number</th>
-          <th>Set Name</th>
-          <th>Year</th>
-          <th>Number of Parts</th>
-          <th>Add</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Rows will be populated by JavaScript -->
-      </tbody>
-    </table>
+    <div
+      class="d-flex flex-column justify-content-center align-items-center p-4"
+      id="brick-layer"
+    >
+      <h1 class="mb-3 w-50 bg-white p-3 rounded-pill text-center">LEGO Sets</h1>
+      <table
+        id="setsTable"
+        class="table table-hover table-responsive w-50 border border-dark"
+      >
+        <thead class="table-dark">
+          <tr>
+            <th scope="text-center align-middle">Image</th>
+            <th scope="text-center align-middle">Set Number</th>
+            <th scope="text-center align-middle">Set Name</th>
+            <th scope="text-center align-middle">Year</th>
+            <th scope="text-center align-middle">Number of Parts</th>
+            <th scope="text-center align-middle">Add</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows will be populated by JavaScript -->
+        </tbody>
+      </table>
 
+      <div class="d-flex justify-content-center">
+        <img id="spinner" src="./resources/spinner.gif" />
+      </div>
+    </div>
     <script src="sets.js"></script>
   </body>
 </html>
