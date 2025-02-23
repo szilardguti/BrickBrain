@@ -5,9 +5,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const setNumber = getQueryParam("set_num");
-  if (setNumber) {
-    document.getElementById("set_number").value = setNumber;
+  if (!setNumber) {
+    window.location.href = "themes.html";
   }
+
+  document.getElementById("set_number").value = setNumber;
 
   const setName = sessionStorage.getItem("set_name");
   if (setName) {
@@ -59,10 +61,13 @@ document.addEventListener("DOMContentLoaded", function () {
       })
         .then((response) => {
           if (response.ok) {
-            console.log("Data submitted successfully!");
             window.location.href = "mysets.html";
           } else {
             return response.json().then((errorData) => {
+              // no cookie found
+              if (errorData.err_code && errorData.err_code == 401)
+                window.location.href = "login.html";
+
               throw new Error(errorData.message || "An error occurred");
             });
           }

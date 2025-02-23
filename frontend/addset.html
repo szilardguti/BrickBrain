@@ -13,88 +13,147 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h2>LEGO Set Details</h2>
-    <img style="width: 25%" id="set_img" />
-    <form id="legoSetForm">
-      <!-- Set Number (prefilled from query param) -->
-      <label for="set_number">Set Number:</label>
-      <input type="text" id="set_number" name="set_number" required readonly />
-      <br /><br />
-
-      <!-- Set Name (prefilled from sessionStorage) -->
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required />
-      <br /><br />
-
-      <!-- Purchase Price -->
-      <label for="purchase_price">Purchase Price ($):</label>
-      <input
-        type="number"
-        id="purchase_price"
-        name="purchase_price"
-        step="0.01"
-        min="0"
-        required
-      />
-      <br /><br />
-
-      <!-- Average Price -->
-      <label for="average_price">Average Market Price ($):</label>
-      <input
-        type="number"
-        id="average_price"
-        name="average_price"
-        step="0.01"
-        min="0"
-        required
-      />
-      <br /><br />
-
-      <!-- Average Price Half-Year -->
-      <label for="average_price_half_year">Half-Year Average Price ($):</label>
-      <input
-        type="number"
-        id="average_price_half_year"
-        name="average_price_half_year"
-        step="0.01"
-        min="0"
-        required
-      />
-      <br /><br />
-
-      <!-- Overpriced (Checkbox) -->
-      <label for="overpriced">Overpriced:</label>
-      <input type="checkbox" id="overpriced" name="overpriced" />
-      <br /><br />
-
-      <!-- Missing Pieces -->
-      <label for="missing_pieces">Missing Pieces (comma-separated):</label>
-      <textarea
-        id="missing_pieces"
-        name="missing_pieces"
-        placeholder="e.g., piece1, piece2"
+    <div
+      class="d-flex flex-column justify-content-center align-items-center p-4"
+      id="brick-layer"
+    >
+      <h2 class="mb-3 w-50 bg-white p-3 rounded-pill text-center">
+        LEGO Set Details
+      </h2>
+      <div
+        class="d-flex w-75 p-3 bg-white p-4 rounded shadow-lg align-items-center"
       >
-      </textarea>
-      <br /><br />
+        <img class="w-100 h-50" id="set_img" />
+        <form id="legoSetForm" class="container">
+          <div class="mb-3">
+            <label for="set_number" class="form-label">Set Number:</label>
+            <input
+              type="text"
+              id="set_number"
+              name="set_number"
+              class="form-control"
+              required
+              readonly
+              disabled
+            />
+          </div>
 
-      <!-- Origin -->
-      <label for="origin">Origin:</label>
-      <input type="text" id="origin" name="origin" required />
-      <br /><br />
+          <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-control"
+              required
+            />
+          </div>
 
-      <!-- Has Manual (Checkbox) -->
-      <label for="has_manual">Includes Manual:</label>
-      <input type="checkbox" id="has_manual" name="has_manual" />
-      <br /><br />
+          <div class="mb-3">
+            <label for="purchase_price" class="form-label"
+              >Purchase Price ($):</label
+            >
+            <input
+              type="number"
+              id="purchase_price"
+              name="purchase_price"
+              class="form-control"
+              step="0.01"
+              min="0"
+              required
+            />
+          </div>
 
-      <label for="has_box">Includes Box:</label>
-      <input type="checkbox" id="has_box" name="has_box" />
-      <br /><br />
+          <div class="mb-3">
+            <label for="average_price" class="form-label"
+              >Average Market Price ($):</label
+            >
+            <input
+              type="number"
+              id="average_price"
+              name="average_price"
+              class="form-control"
+              step="0.01"
+              min="0"
+              required
+            />
+          </div>
 
-      <!-- Submit Button -->
-      <button type="submit">Submit</button>
-    </form>
+          <div class="mb-3">
+            <label for="average_price_half_year" class="form-label"
+              >Half-Year Average Price ($):</label
+            >
+            <input
+              type="number"
+              id="average_price_half_year"
+              name="average_price_half_year"
+              class="form-control"
+              step="0.01"
+              min="0"
+              required
+            />
+          </div>
 
+          <div class="form-check mb-3">
+            <input
+              type="checkbox"
+              id="overpriced"
+              name="overpriced"
+              class="form-check-input"
+            />
+            <label for="overpriced" class="form-check-label">Overpriced</label>
+          </div>
+
+          <div class="mb-3">
+            <label for="missing_pieces" class="form-label"
+              >Missing Pieces (comma-separated):</label
+            >
+            <textarea
+              id="missing_pieces"
+              name="missing_pieces"
+              class="form-control"
+              rows="3"
+              placeholder="e.g., piece1, piece2"
+            ></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="origin" class="form-label">Origin:</label>
+            <input
+              type="text"
+              id="origin"
+              name="origin"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <div class="form-check mb-3">
+            <input
+              type="checkbox"
+              id="has_manual"
+              name="has_manual"
+              class="form-check-input"
+            />
+            <label for="has_manual" class="form-check-label"
+              >Includes Manual</label
+            >
+          </div>
+
+          <div class="form-check mb-4">
+            <input
+              type="checkbox"
+              id="has_box"
+              name="has_box"
+              class="form-check-input"
+            />
+            <label for="has_box" class="form-check-label">Includes Box</label>
+          </div>
+
+          <button type="submit" class="btn btn-yellow w-100">Submit</button>
+        </form>
+      </div>
+    </div>
     <script src="addset.js"></script>
   </body>
 </html>
