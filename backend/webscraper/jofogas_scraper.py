@@ -59,12 +59,20 @@ def scrape_per_page(url, query_term, page=1):
 
 def scrape_all_page(url, query_term, min_ms=20, max_ms=500):
     all_content_areas, last_page = scrape_first_page(url, query_term)
+    print("first page is scraped!")
 
     if not last_page:
+        print("only one page is present... now returning")
         return all_content_areas
 
     if last_page > SCRAPE_LIMIT:
         raise MyCustomError("Too many pages to scrape!", ErrorCode.SCRAPE_LIMIT_EXCEEDED)
+
+    print(f"{last_page} pages are present...")
+
+    wait_time = random.uniform(min_ms, max_ms) / 1000  # Convert ms to seconds
+    time.sleep(wait_time)
+    print(f"wait {wait_time:.5f} ms for next scrape...")
 
     for current_page in range(2, last_page + 1):
         all_content_areas.extend(scrape_per_page(url, query_term, current_page))
@@ -73,6 +81,7 @@ def scrape_all_page(url, query_term, min_ms=20, max_ms=500):
         time.sleep(wait_time)
         print(f"page {current_page} done, wait {wait_time:.5f} ms...")
 
+    print("scraping done, now returning!")
     return all_content_areas
 
 
@@ -95,3 +104,8 @@ def process_pages(result_htmls):
         result_dicts.append(ad_dict)
 
     return result_dicts
+
+
+# example:
+results = scrape_all_page("https://www.jofogas.hu/magyarorszag", "lego pirates")
+print(process_pages(results))
