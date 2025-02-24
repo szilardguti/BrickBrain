@@ -107,5 +107,5 @@ def process_pages(result_htmls):
 
 
 # example:
-results = scrape_all_page("https://www.jofogas.hu/magyarorszag", "lego pirates")
-print(process_pages(results))
+#results = scrape_all_page("https://www.jofogas.hu/magyarorszag", "lego pirates")
+#print(process_pages(results))
