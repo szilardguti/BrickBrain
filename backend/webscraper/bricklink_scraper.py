@@ -1,8 +1,11 @@
+import random
+import time
+
 import requests
 import json
 from bs4 import BeautifulSoup
 
-ajax_url = "https://www.bricklink.com/ajax/clone/catalogifs.ajax?"
+ajax_url = "https://www.bricklink.com/ajax/clone/catalogifs.ajax"
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 "
@@ -42,6 +45,12 @@ def scrape_items(ajax_item_id, ajax_rpp=500, ajax_page=1):
     }
 
     ajax_response = requests.get(ajax_url, params=ajax_params, headers=headers)
+    if not ajax_response.ok:
+        print(f"an error ({ajax_response.status_code}) occurred when requesting: "
+              f"\ntext: {ajax_response.text}"
+              f"\ncontent: {ajax_response.content}")
+        exit(-ajax_response.status_code)
+
     ajax_json = json.loads(ajax_response.text)
 
     total_count = ajax_json['total_count']
@@ -82,7 +91,8 @@ def process_items(raw_items):
     return process_result
 
 
-def scrape_bricklink(lego_code):
+def scrape_bricklink_one_set(lego_code):
+    print(f"\n\nscraping for set {lego_code}")
     item_id = scrape_item_id(lego_code)
     scraped_items = scrape_items(item_id)
     processed_items = process_items(scraped_items)
@@ -90,6 +100,27 @@ def scrape_bricklink(lego_code):
     return processed_items
 
 
+def scrape_bricklink_multiple_set(lego_code_list):
+    result_dict = {}
+    for lego_code in lego_code_list:
+        result_dict[lego_code] = scrape_bricklink_one_set(lego_code)
+
+        wait_time = random.uniform(500, 2000) / 1000
+        time.sleep(wait_time)
+        print(f"scraping for set {lego_code} done, wait {wait_time:.5f} ms...")
+    return result_dict
+
+
 # example
-#result = scrape_bricklink("6243")
-#print(json.dumps(result, indent=2))
+# result = scrape_bricklink_one_set("1795-1")
+# print(json.dumps(result, indent=2))
+
+# codes for every Pirates I set
+pirates_codes = ['10040-1', '1464-1', '1481-1', '1492-1', '1696-1', '1713-1', '1729-1', '1733-1', '1747-1', '1788-1',
+                 '1795-1', '1802-1', '1871-1', '1872-1', '1873-1', '1889-1', '1970-1', '6200-1', '6204-1', '6232-1',
+                 '6234-1', '6235-1', '6236-1', '6237-1', '6244-1', '6245-1', '6246-1', '6247-1', '6248-1', '6249-1',
+                 '6250-1', '6251-1', '6252-1', '6254-1', '6255-1', '6256-1', '6257-1', '6258-1', '6259-1', '6260-1',
+                 '6261-1', '6262-1', '6263-1', '6264-1', '6265-1', '6266-1', '6267-1', '6268-1', '6270-1', '6271-1',
+                 '6271-2', '6273-1', '6274-1', '6276-1', '6277-1', '6278-1', '6279-1', '6280-1', '6281-1', '6285-1',
+                 '6286-1', '6289-1', '6290-1', '6291-1', '6292-1', '6296-1', 'K6290-1']
+# multiple_result = scrape_bricklink_multiple_set(['6286-1', '6289-1'])
