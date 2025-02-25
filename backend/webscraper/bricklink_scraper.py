@@ -100,14 +100,16 @@ def scrape_bricklink_one_set(lego_code):
     return processed_items
 
 
-def scrape_bricklink_multiple_set(lego_code_list):
+# With a longer code list we can easily get blocked by the API, resulting in 403 response codes
+# TODO: check for longer wait integrals or redo with selinium:)
+def scrape_bricklink_multiple_set(lego_code_list: list, min_ms: int = 20, max_ms: int = 500) -> dict:
     result_dict = {}
     for lego_code in lego_code_list:
         result_dict[lego_code] = scrape_bricklink_one_set(lego_code)
 
-        wait_time = random.uniform(500, 2000) / 1000
-        time.sleep(wait_time)
+        wait_time = random.uniform(min_ms, max_ms) / 1000
         print(f"scraping for set {lego_code} done, wait {wait_time:.5f} ms...")
+        time.sleep(wait_time)
     return result_dict
 
 
